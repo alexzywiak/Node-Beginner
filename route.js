@@ -1,10 +1,10 @@
 'use strict';
 
-var route = function( handle, pathname, response, postData ){
+var route = function( handle, pathname, response, request ){
   console.log('Handling routing for '  + pathname);
 
   if( typeof handle[ pathname ] === 'function' ){
-    handle[ pathname ]( response, postData );
+    handle[ pathname ]( response, request );
   } else {
     console.log('Request Handler Not Found for ' + pathname);
     response.writeHead(404, {'Content-Type': 'text/plain'} );
