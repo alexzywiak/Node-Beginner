@@ -6,13 +6,25 @@ var http = require('http'),
 
 function start( route, handle ) {
 
-  http.createServer( function( request, response ){
-    var pathname = url.parse( request.url ).pathname;
-    console.log('Pathname: ' + pathname);
+  var onRequest = function(request, response){
+    var postData = '',
+        pathName = url.parse( request.url ).pathname;
 
-    route(  handle, pathname, response );
+    console.log( 'Roger Roger on wavelength ' + pathName );
 
-  }).listen( port );
+    request.setEncoding('utf8');
+
+    request.addListener( 'data', function( chunk ){
+      postData += chunk;
+      console.log( 'How much wood can a woodchunk chunk: ' + chunk);
+    });
+
+    request.addListener( 'end', function(){
+      route( handle, pathName, response, postData );
+    });
+  };
+
+  http.createServer( onRequest ).listen( port );
 
   console.log('It has begun on port ' + port + '...');
 }
